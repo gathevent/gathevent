@@ -4,7 +4,7 @@ node_modules
 .pnp.js
 
 # Environment Variables
-.env*
+/.env*
 !.env.example
 
 # Testing
@@ -35,3 +35,6 @@ yarn-error.log*
 # IDEs
 .vscode/
 .idea/
+
+# Prisma
+packages/prisma/client
