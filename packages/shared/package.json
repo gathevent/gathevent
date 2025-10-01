@@ -1,0 +1,8 @@
+{
+  "name": "@gathevent/shared",
+  "version": "0.0.0",
+  "dependencies": {
+    "@gathevent/prisma": "workspace:^",
+    "better-auth": "^1.3.24"
+  }
+}
