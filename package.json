@@ -1,17 +1,22 @@
 {
   "name": "gathevent",
   "devDependencies": {
+    "@biomejs/biome": "2.2.4",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
     "turbo": "^2.5.8"
-  },
-  "packageManager": "pnpm@9.0.0",
-  "engines": {
-    "node": ">=20"
   },
   "scripts": {
     "prepare": "husky",
     "commitlint": "commitlint --edit"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": "biome check --fix"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
   }
 }
