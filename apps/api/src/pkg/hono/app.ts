@@ -3,10 +3,12 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { requestId } from "hono/request-id";
-import { handleError, handleNotFound } from "../errors/http";
+import { handleError, handleNotFound, handleZodError } from "../errors/http";
 
 const appFactory = () => {
-  const app = new OpenAPIHono();
+  const app = new OpenAPIHono({
+    defaultHook: handleZodError,
+  });
 
   app.use(requestId());
   app.use(prettyJSON());
@@ -27,4 +29,5 @@ const appFactory = () => {
   return app;
 };
 
+export type App = ReturnType<typeof appFactory>;
 export { appFactory };
