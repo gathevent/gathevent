@@ -42,6 +42,9 @@ importers:
       '@gathevent/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@gathevent/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@types/node':
         specifier: ^20.11.17
         version: 20.19.19
