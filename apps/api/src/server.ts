@@ -1,5 +1,5 @@
 import { serve } from "@hono/node-server";
-import { bootstrapApp } from "./pkg/hono/app";
+import { bootstrapApp } from "@/pkg/hono/app";
 
 const app = bootstrapApp();
 
