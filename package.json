@@ -4,14 +4,17 @@
     "@biomejs/biome": "2.2.4",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@types/node": "^20.11.17",
     "husky": "^9.1.7",
+    "knip": "^5.64.1",
     "lint-staged": "^16.2.3",
-    "turbo": "^2.5.8"
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "prepare": "husky",
     "lint": "biome check",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "knip": "knip"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": "biome check --fix"
