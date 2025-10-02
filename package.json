@@ -15,7 +15,8 @@
     "prepare": "husky",
     "lint": "biome check",
     "commitlint": "commitlint --edit",
-    "knip": "knip"
+    "knip": "knip",
+    "betterauth:generate": "pnpx @better-auth/cli@latest generate --config packages/shared/auth.ts --output packages/prisma/schema.prisma"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": "biome check --fix"
