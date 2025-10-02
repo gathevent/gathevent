@@ -2,6 +2,8 @@ import { z } from "@hono/zod-openapi";
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
+import type { ZodError } from "zod";
+import { parseZodError } from "@/pkg/utils/zod-error";
 
 const ERROR_CONFIG = {
   BAD_REQUEST: {
@@ -87,30 +89,6 @@ const statusToCode = (status: ContentfulStatusCode): keyof typeof ERROR_CONFIG =
 const codeToDefaultMessage = (code: keyof typeof ERROR_CONFIG): string => {
   return ERROR_CONFIG[code]?.message ?? ERROR_CONFIG.INTERNAL_SERVER_ERROR.message;
 };
-
-// biome-ignore lint/suspicious/noExplicitAny: Prefer to leave as is for flexibility
-export function errorSchemaFactory(code: z.ZodEnum<any>) {
-  return z.object({
-    success: z.literal(false),
-    error: z.object({
-      code: code.openapi({
-        description: "A machine readable error code.",
-        example: code.options[0],
-      }),
-      name: z.string().openapi({
-        description:
-          "A short, machine-readable identifier for the error, used as a key for i18n translations",
-        example: "EmailAlreadyInUse",
-      }),
-      message: z.string().openapi({
-        description: "A human readable explanation of what went wrong",
-      }),
-      details: z.record(z.any(), z.unknown()).optional().openapi({
-        description: "Additional details about the error",
-      }),
-    }),
-  });
-}
 
 class GathEventApiError extends HTTPException {
   public readonly code: keyof typeof ERROR_CONFIG;
@@ -230,15 +208,31 @@ const handleNotFound = (c: Context): Response => {
   return c.json(response, 404);
 };
 
-export {
-  ERROR_CONFIG,
-  ErrorSchema,
-  ErrorCodes,
-  codeToStatus,
-  statusToCode,
-  codeToDefaultMessage,
-  createErrorResponse,
-  handleError,
-  handleNotFound,
-  GathEventApiError,
+const handleZodError = (
+  result:
+    | {
+        success: true;
+        data: unknown;
+      }
+    | {
+        success: false;
+        error: ZodError;
+      },
+  c: Context,
+) => {
+  if (!result.success) {
+    const zodError = result.error;
+
+    const response = createErrorResponse(
+      "BAD_REQUEST",
+      "ValidationError",
+      "The request data is invalid.",
+      {
+        errors: parseZodError(zodError),
+      },
+    );
+    return c.json(response, 400);
+  }
 };
+
+export { handleError, handleNotFound, handleZodError };
