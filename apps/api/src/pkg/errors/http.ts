@@ -66,15 +66,14 @@ const errorSchemaFactory = (code: z.ZodEnum<any>) => {
     success: z.literal(false).openapi({ example: false }),
     error: z.object({
       code: code.openapi({
-        description: "A machine-readable error code",
+        description: "A machine-readable HTTP error code",
         example: firstValue,
       }),
       name: z.string().openapi({
-        description:
-          "A short, machine-readable identifier for the error, used as a key for i18n translations",
+        description: "A short, machine-readable identifier for the error",
       }),
       message: z.string().openapi({ description: "A human-readable explanation of the error" }),
-      details: z.record(z.any(), z.unknown()).optional().openapi({
+      details: z.record(z.any(), z.any()).optional().openapi({
         description: "Additional details about the error",
       }),
     }),
@@ -85,16 +84,15 @@ const ErrorSchema = z.object({
   success: z.literal(false),
   error: z.object({
     code: ErrorCodes.openapi({
-      description: "A machine-readable error code",
+      description: "A machine-readable HTTP error code",
       example: "BAD_REQUEST",
     }),
     name: z.string().openapi({
-      description:
-        "A short, machine-readable identifier for the error, used as a key for i18n translations",
-      example: "EmailAlreadyInUse",
+      description: "A short, machine-readable identifier for the error",
+      example: "EmailAlreadyExists",
     }),
     message: z.string().openapi({ description: "A human-readable explanation of the error" }),
-    details: z.record(z.any(), z.unknown()).optional().openapi({
+    details: z.record(z.any(), z.any()).optional().openapi({
       description: "Additional details about the error",
     }),
   }),
@@ -152,19 +150,51 @@ class GathEventApiError extends HTTPException {
     });
   }
 
-  static forbidden(name: string, message?: string, details?: Record<string, unknown>) {
+  static forbidden({
+    name,
+    message,
+    details,
+  }: {
+    name: string;
+    message?: string;
+    details?: Record<string, unknown>;
+  }) {
     return new GathEventApiError({ code: "FORBIDDEN", name, message, details });
   }
 
-  static notFound(name: string, message?: string, details?: Record<string, unknown>) {
+  static notFound({
+    name,
+    message,
+    details,
+  }: {
+    name: string;
+    message?: string;
+    details?: Record<string, unknown>;
+  }) {
     return new GathEventApiError({ code: "NOT_FOUND", name, message, details });
   }
 
-  static conflict(name: string, message?: string, details?: Record<string, unknown>) {
+  static conflict({
+    name,
+    message,
+    details,
+  }: {
+    name: string;
+    message?: string;
+    details?: Record<string, unknown>;
+  }) {
     return new GathEventApiError({ code: "CONFLICT", name, message, details });
   }
 
-  static methodNotAllowed(name: string, message?: string, details?: Record<string, unknown>) {
+  static methodNotAllowed({
+    name,
+    message,
+    details,
+  }: {
+    name: string;
+    message?: string;
+    details?: Record<string, unknown>;
+  }) {
     return new GathEventApiError({
       code: "METHOD_NOT_ALLOWED",
       name,
@@ -173,7 +203,15 @@ class GathEventApiError extends HTTPException {
     });
   }
 
-  static tooManyRequests(name: string, message?: string, details?: Record<string, unknown>) {
+  static tooManyRequests({
+    name,
+    message,
+    details,
+  }: {
+    name: string;
+    message?: string;
+    details?: Record<string, unknown>;
+  }) {
     return new GathEventApiError({
       code: "TOO_MANY_REQUESTS",
       name,
@@ -182,7 +220,15 @@ class GathEventApiError extends HTTPException {
     });
   }
 
-  static internalServerError(name: string, message?: string, details?: Record<string, unknown>) {
+  static internalServerError({
+    name,
+    message,
+    details,
+  }: {
+    name: string;
+    message?: string;
+    details?: Record<string, unknown>;
+  }) {
     return new GathEventApiError({
       code: "INTERNAL_SERVER_ERROR",
       name,
@@ -257,4 +303,4 @@ const handleZodError = (
   }
 };
 
-export { handleError, handleNotFound, handleZodError, errorSchemaFactory };
+export { handleError, handleNotFound, handleZodError, errorSchemaFactory, GathEventApiError };
