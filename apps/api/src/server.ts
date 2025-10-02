@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
-import { bootstrapApp } from "@/pkg/hono/app";
+import { appFactory } from "@/pkg/hono/app";
 
-const app = bootstrapApp();
+const app = appFactory();
 
 serve({ fetch: app.fetch, port: 3000 });
