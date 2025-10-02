@@ -1,4 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
+import { openApiErrorResponses } from "@/pkg/errors/openapi-response";
 import type { App } from "@/pkg/hono/app";
 
 const route = createRoute({
@@ -14,7 +15,7 @@ const route = createRoute({
           schema: z.object({
             name: z.string().min(1).max(100).describe("The user's full name"),
             email: z.email().describe("The user's email address"),
-            password: z.string().min(6).max(100).describe("The user's password"),
+            password: z.string().min(8).max(128).describe("The user's password"),
           }),
         },
       },
@@ -34,6 +35,7 @@ const route = createRoute({
         },
       },
     },
+    ...openApiErrorResponses,
   },
 });
 
