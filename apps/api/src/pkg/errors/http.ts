@@ -59,6 +59,28 @@ const ErrorCodes = z.enum([
   "TOO_MANY_REQUESTS",
 ]);
 
+// biome-ignore lint/suspicious/noExplicitAny: ZodEnum generic parameter
+const errorSchemaFactory = (code: z.ZodEnum<any>) => {
+  const firstValue = code.options?.[0] ?? "UNKNOWN_ERROR";
+  return z.object({
+    success: z.literal(false).openapi({ example: false }),
+    error: z.object({
+      code: code.openapi({
+        description: "A machine-readable error code",
+        example: firstValue,
+      }),
+      name: z.string().openapi({
+        description:
+          "A short, machine-readable identifier for the error, used as a key for i18n translations",
+      }),
+      message: z.string().openapi({ description: "A human-readable explanation of the error" }),
+      details: z.record(z.any(), z.unknown()).optional().openapi({
+        description: "Additional details about the error",
+      }),
+    }),
+  });
+};
+
 const ErrorSchema = z.object({
   success: z.literal(false),
   error: z.object({
@@ -235,4 +257,4 @@ const handleZodError = (
   }
 };
 
-export { handleError, handleNotFound, handleZodError };
+export { handleError, handleNotFound, handleZodError, errorSchemaFactory };
